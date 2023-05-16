@@ -63,10 +63,12 @@ export default function App() {
                 );
 
                 Image.getSize(data.url, (imgWidth, imgHeight) => {
-                    let ratio =
-                        (Dimensions.get("window").width -
-                            styles.container.marginHorizontal) /
-                        imgWidth;
+                    // Desired width of image is screen width minus 2 horizontal-padding widths to account for padding on both
+                    // left and right sides of screen.
+                    let width: number =
+                        Dimensions.get("window").width -
+                        styles.container.marginHorizontal * 2;
+                    let ratio = width / imgWidth;
 
                     setImageWidth(imgWidth * ratio);
                     setImageHeight(imgHeight * ratio);
@@ -78,28 +80,42 @@ export default function App() {
     }, []);
 
     return (
-        <SafeAreaView style={styles.container}>
-            <ScrollView>
-                <Text>{error}</Text>
-                <Text style={styles.title}>{data?.title}</Text>
-                <Text style={styles.subtitle}>
-                    {data?.copyright} {"\u2022"} {data?.date}
-                </Text>
-                <Text>{data?.explanation}</Text>
-                <Image
-                    source={{ uri: data?.url }}
-                    style={{
-                        width: imageWidth,
-                        height: imageHeight,
-                    }}
-                />
-            </ScrollView>
+        <>
+            {data === undefined ? (
+                <View style={styles.loadingContainer}>
+                    <Text style={{ fontSize: 42 }}>Loading...</Text>
+                </View>
+            ) : (
+                <View style={styles.container}>
+                    <ScrollView>
+                        <Text>{error}</Text>
+                        <Text style={styles.title}>{data.title}</Text>
+                        <Text style={styles.subtitle}>
+                            {data.copyright} {"\u2022"} {data.date}
+                        </Text>
+                        <Text>{data.explanation}</Text>
+                        <Image
+                            source={{ uri: data.url }}
+                            style={{
+                                width: imageWidth,
+                                height: imageHeight,
+                            }}
+                        />
+                    </ScrollView>
+                </View>
+            )}
             <StatusBar style="auto" />
-        </SafeAreaView>
+        </>
     );
 }
 
 const styles = StyleSheet.create({
+    loadingContainer: {
+        flex: 1,
+        paddingTop: SB.currentHeight,
+        alignItems: "center",
+        justifyContent: "center",
+    },
     container: {
         flex: 1,
         paddingTop: SB.currentHeight,
