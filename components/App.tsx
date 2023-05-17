@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import { View, StyleSheet, StatusBar as SB, Text } from "react-native";
+import { View, StyleSheet, StatusBar as SB } from "react-native";
 
 import Loading from "./Loading";
 import APODView, { APODResponse } from "./APODView";

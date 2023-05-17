@@ -8,7 +8,6 @@ import {
     StyleSheet,
     Dimensions,
     Button,
-    Linking,
 } from "react-native";
 
 import DatePicker from "react-native-date-picker"; // source: https://github.com/henninghall/react-native-date-picker
