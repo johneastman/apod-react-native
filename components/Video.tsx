@@ -15,6 +15,7 @@ export default function Video(props: VideoProps): JSX.Element {
             >
                 Watch Video
             </Text>
+            <Text>({props.url})</Text>
         </View>
     );
 }
