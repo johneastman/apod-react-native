@@ -8,9 +8,11 @@ import {
     StyleSheet,
     Dimensions,
     Button,
+    Linking,
 } from "react-native";
 
 import DatePicker from "react-native-date-picker"; // source: https://github.com/henninghall/react-native-date-picker
+import Video from "./Video";
 
 export class APODResponse {
     copyright: string;
@@ -39,28 +41,29 @@ export class APODResponse {
 
 interface APODViewProps {
     data: APODResponse;
-    error: string | undefined;
     getAPOD: (date: Date) => void;
 }
 
 export default function APODView(props: APODViewProps): JSX.Element {
-    let { data, error } = props;
+    let data = props.data;
 
     const [imageWidth, setImageWidth] = useState<number>(0);
     const [imageHeight, setImageHeight] = useState<number>(0);
     const [isDatePickerOpen, setDatePickerOpen] = useState<boolean>(false);
 
-    Image.getSize(data.url, (imgWidth, imgHeight) => {
-        // Desired width of image is screen width minus 2 horizontal-padding widths to account for padding on both
-        // left and right sides of screen.
-        let width: number =
-            Dimensions.get("window").width -
-            styles.container.marginHorizontal * 2;
-        let ratio = width / imgWidth;
+    if (data.mediaType === "image") {
+        Image.getSize(data.url, (imgWidth, imgHeight) => {
+            // Desired width of image is screen width minus 2 horizontal-padding widths to account for padding on both
+            // left and right sides of screen.
+            let width: number =
+                Dimensions.get("window").width -
+                styles.container.marginHorizontal * 2;
+            let ratio = width / imgWidth;
 
-        setImageWidth(imgWidth * ratio);
-        setImageHeight(imgHeight * ratio);
-    });
+            setImageWidth(imgWidth * ratio);
+            setImageHeight(imgHeight * ratio);
+        });
+    }
 
     const [year, month, day] = data.date.split("-");
 
@@ -76,13 +79,19 @@ export default function APODView(props: APODViewProps): JSX.Element {
                     ></Button>
                     <Text style={styles.title}>{data.title}</Text>
                     <Text style={styles.subtitle}>{data.copyright}</Text>
-                    <Image
-                        source={{ uri: data.url }}
-                        style={{
-                            width: imageWidth,
-                            height: imageHeight,
-                        }}
-                    />
+                    <View style={{ paddingVertical: 10 }}>
+                        {data.mediaType === "image" ? (
+                            <Image
+                                source={{ uri: data.url }}
+                                style={{
+                                    width: imageWidth,
+                                    height: imageHeight,
+                                }}
+                            />
+                        ) : (
+                            <Video url={data.url} />
+                        )}
+                    </View>
                     <Text>{data.explanation}</Text>
                 </ScrollView>
             </View>

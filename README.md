@@ -19,3 +19,7 @@ This project replaces the [old Android app](https://github.com/johneastman/APOD)
 1. Run `npx expo run:android --device`
 
 Additional steps/resources can be found [here](https://reactnative.dev/docs/environment-setup?guide=native).
+
+## Testing
+
+-   APOD with video: 2022-07-09 (The month is August but the value is 7 because months are 0-based indices for JavaScript `Date` objects).

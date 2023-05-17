@@ -18,6 +18,7 @@ export default function App(): JSX.Element {
     }, []);
 
     let getAPOD = (date: Date = new Date()) => {
+        // TODO: REMOVE HARD-CODED DATE AFTER FINISHING TASK!!!!!
         let year: number = date.getFullYear();
         let month: number = date.getMonth() + 1;
         let day: number = date.getDate();
@@ -38,7 +39,9 @@ export default function App(): JSX.Element {
 
                 if (status == 200) {
                     let apodResponse = new APODResponse(
-                        json.copyright || "Public Domain",
+                        json.media_type === "video"
+                            ? "Video"
+                            : json.copyright || "Public Domain",
                         json.title,
                         json.date,
                         json.explanation,
@@ -72,7 +75,7 @@ export default function App(): JSX.Element {
                                 setError(undefined);
                             }}
                         />
-                        <APODView data={data} error={error} getAPOD={getAPOD} />
+                        <APODView data={data} getAPOD={getAPOD} />
                     </>
                 )}
             </View>
