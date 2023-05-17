@@ -1,21 +1,33 @@
-import { View, Text, Linking, StyleSheet } from "react-native";
+import {
+    View,
+    Text,
+    Image,
+    Linking,
+    StyleSheet,
+    Pressable,
+} from "react-native";
+import CustomImage from "./CustomImage";
 
 interface VideoProps {
-    url: string;
+    video_url: string;
+    thumbnail_url: string;
+    thumbnail_width: number;
 }
 
 export default function Video(props: VideoProps): JSX.Element {
     return (
         <View style={styles.centeredView}>
-            <Text
-                style={{ color: "blue", fontSize: 20 }}
+            <Pressable
                 onPress={() => {
-                    Linking.openURL(props.url);
+                    Linking.openURL(props.video_url);
                 }}
             >
-                Watch Video
-            </Text>
-            <Text>({props.url})</Text>
+                <CustomImage
+                    url={props.thumbnail_url}
+                    width={props.thumbnail_width}
+                />
+            </Pressable>
+            <Text>{props.video_url}</Text>
         </View>
     );
 }

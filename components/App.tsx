@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { StyleSheet, StatusBar as SB, Dimensions } from "react-native";
+import { StatusBar as SB, Dimensions } from "react-native";
 import { TabView, SceneMap } from "react-native-tab-view";
 import Find from "./Find";
 import Feed from "./Feed";

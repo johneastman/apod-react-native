@@ -25,7 +25,7 @@ export default function Find(): JSX.Element {
             .toString()
             .padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
 
-        fetch(`${baseUrl}?api_key=${API_KEY}&date=${dateString}`)
+        fetch(`${baseUrl}?api_key=${API_KEY}&date=${dateString}&thumbs=true`)
             .then(async (response) => {
                 return {
                     status: response.status,
@@ -44,7 +44,8 @@ export default function Find(): JSX.Element {
                         json.date,
                         json.explanation,
                         json.media_type,
-                        json.url
+                        json.url,
+                        json.thumbnail_url || json.url
                     );
                     setData(apodResponse);
                     setError(undefined);

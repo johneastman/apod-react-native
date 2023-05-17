@@ -12,6 +12,7 @@ import {
 
 import DatePicker from "react-native-date-picker"; // source: https://github.com/henninghall/react-native-date-picker
 import Video from "./Video";
+import CustomImage from "./CustomImage";
 
 export class APODResponse {
     copyright: string;
@@ -19,7 +20,8 @@ export class APODResponse {
     date: string;
     explanation: string;
     mediaType: string;
-    url: string;
+    media_url: string;
+    thumbnail_url: string;
 
     constructor(
         copyright: string,
@@ -27,14 +29,16 @@ export class APODResponse {
         date: string,
         explanation: string,
         mediaType: string,
-        url: string
+        media_url: string,
+        thumbnail_url: string
     ) {
         this.copyright = copyright;
         this.title = title;
         this.date = date;
         this.explanation = explanation;
         this.mediaType = mediaType;
-        this.url = url;
+        this.media_url = media_url; // for videos, this is the video url
+        this.thumbnail_url = thumbnail_url; // for videos, this is the thumbnail url; for images, it's the image url
     }
 }
 
@@ -44,27 +48,13 @@ interface APODViewProps {
 }
 
 export default function APODView(props: APODViewProps): JSX.Element {
-    let data = props.data;
+    let { data, getAPOD } = props;
 
-    const [imageWidth, setImageWidth] = useState<number>(0);
-    const [imageHeight, setImageHeight] = useState<number>(0);
     const [isDatePickerOpen, setDatePickerOpen] = useState<boolean>(false);
-
-    if (data.mediaType === "image") {
-        Image.getSize(data.url, (imgWidth, imgHeight) => {
-            // Desired width of image is screen width minus 2 horizontal-padding widths to account for padding on both
-            // left and right sides of screen.
-            let width: number =
-                Dimensions.get("window").width -
-                styles.container.marginHorizontal * 2;
-            let ratio = width / imgWidth;
-
-            setImageWidth(imgWidth * ratio);
-            setImageHeight(imgHeight * ratio);
-        });
-    }
-
     const [year, month, day] = data.date.split("-");
+
+    let imageWidth: number =
+        Dimensions.get("window").width - styles.container.marginHorizontal * 2;
 
     return (
         <>
@@ -80,15 +70,16 @@ export default function APODView(props: APODViewProps): JSX.Element {
                     <Text style={styles.subtitle}>{data.copyright}</Text>
                     <View style={{ paddingVertical: 10 }}>
                         {data.mediaType === "image" ? (
-                            <Image
-                                source={{ uri: data.url }}
-                                style={{
-                                    width: imageWidth,
-                                    height: imageHeight,
-                                }}
+                            <CustomImage
+                                url={data.thumbnail_url}
+                                width={imageWidth}
                             />
                         ) : (
-                            <Video url={data.url} />
+                            <Video
+                                video_url={data.media_url}
+                                thumbnail_url={data.thumbnail_url}
+                                thumbnail_width={imageWidth}
+                            />
                         )}
                     </View>
                     <Text>{data.explanation}</Text>
@@ -106,7 +97,7 @@ export default function APODView(props: APODViewProps): JSX.Element {
                     )
                 }
                 onConfirm={(date) => {
-                    props.getAPOD(date);
+                    getAPOD(date);
                     setDatePickerOpen(false);
                 }}
                 onCancel={() => {
