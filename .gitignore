@@ -18,3 +18,6 @@ web-build/
 
 # SDKs
 android/
+
+# Environment
+.env

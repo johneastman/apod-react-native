@@ -12,6 +12,12 @@ This project replaces the [old Android app](https://github.com/johneastman/APOD)
 
 1. Run `npm install` from root directory.
 
+## Setup
+
+1. Generate a NASA API key [here](https://api.nasa.gov/).
+2. Create a file called `.env` in the root directory of this project.
+3. Add your API key to that file with the key `API_KEY`.
+
 ### Run on Android Device
 
 1. Download Android Studio

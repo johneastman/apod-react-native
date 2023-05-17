@@ -5,20 +5,19 @@ import { View, StyleSheet, StatusBar as SB, Text } from "react-native";
 import Loading from "./Loading";
 import APODView, { APODResponse } from "./APODView";
 import ErrorModal from "./ErrorModal";
+import { API_KEY } from "@env";
 
 export default function App(): JSX.Element {
     const [data, setData] = useState<APODResponse>();
     const [error, setError] = useState<string>();
 
     let baseUrl: string = "https://api.nasa.gov/planetary/apod";
-    let apiKey: string = "U49pcyFPwCOyQpCFTIlJf9SEeJgjIpGhXshmlUmf";
 
     useEffect(() => {
         getAPOD();
     }, []);
 
     let getAPOD = (date: Date = new Date()) => {
-        // TODO: REMOVE HARD-CODED DATE AFTER FINISHING TASK!!!!!
         let year: number = date.getFullYear();
         let month: number = date.getMonth() + 1;
         let day: number = date.getDate();
@@ -27,7 +26,7 @@ export default function App(): JSX.Element {
             .toString()
             .padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
 
-        fetch(`${baseUrl}?api_key=${apiKey}&date=${dateString}`)
+        fetch(`${baseUrl}?api_key=${API_KEY}&date=${dateString}`)
             .then(async (response) => {
                 return {
                     status: response.status,
