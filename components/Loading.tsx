@@ -1,18 +1,5 @@
-import { StyleSheet, View, Text, StatusBar } from "react-native";
+import { Text } from "react-native";
 
 export default function Loading(): JSX.Element {
-    return (
-        <View style={styles.container}>
-            <Text style={{ fontSize: 42 }}>Loading...</Text>
-        </View>
-    );
+    return <Text style={{ fontSize: 42 }}>Loading...</Text>;
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingTop: StatusBar.currentHeight,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-});

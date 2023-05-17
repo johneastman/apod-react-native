@@ -1,8 +1,10 @@
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
+import { View, StyleSheet, StatusBar as SB, Text } from "react-native";
 
 import Loading from "./Loading";
 import APODView, { APODResponse } from "./APODView";
+import ErrorModal from "./ErrorModal";
 
 export default function App(): JSX.Element {
     const [data, setData] = useState<APODResponse>();
@@ -44,7 +46,7 @@ export default function App(): JSX.Element {
                         json.url
                     );
                     setData(apodResponse);
-                    setError("");
+                    setError(undefined);
                 } else {
                     setError(json.msg);
                 }
@@ -56,12 +58,34 @@ export default function App(): JSX.Element {
 
     return (
         <>
-            {data === undefined ? (
-                <Loading />
-            ) : (
-                <APODView data={data} error={error || ""} getAPOD={getAPOD} />
-            )}
+            <View style={styles.container}>
+                {data === undefined ? (
+                    <Loading />
+                ) : (
+                    <>
+                        <ErrorModal
+                            errorMessage={error}
+                            isVisible={error !== undefined}
+                            dismiss={() => {
+                                // The modal's visibiliy is determined by whether the error message is undefined or not,
+                                // so set the error to undefined to dismiss the modal.
+                                setError(undefined);
+                            }}
+                        />
+                        <APODView data={data} error={error} getAPOD={getAPOD} />
+                    </>
+                )}
+            </View>
             <StatusBar style="auto" />
         </>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        paddingTop: SB.currentHeight,
+    },
+});

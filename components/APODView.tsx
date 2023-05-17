@@ -39,7 +39,7 @@ export class APODResponse {
 
 interface APODViewProps {
     data: APODResponse;
-    error: string;
+    error: string | undefined;
     getAPOD: (date: Date) => void;
 }
 
@@ -68,7 +68,6 @@ export default function APODView(props: APODViewProps): JSX.Element {
         <>
             <View style={styles.container}>
                 <ScrollView>
-                    <Text>{error}</Text>
                     <Button
                         title={data.date}
                         onPress={() => {
