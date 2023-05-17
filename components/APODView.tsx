@@ -7,7 +7,10 @@ import {
     StatusBar,
     StyleSheet,
     Dimensions,
+    Button,
 } from "react-native";
+
+import DatePicker from "react-native-date-picker"; // source: https://github.com/henninghall/react-native-date-picker
 
 export class APODResponse {
     copyright: string;
@@ -37,6 +40,7 @@ export class APODResponse {
 interface APODViewProps {
     data: APODResponse;
     error: string;
+    getAPOD: (date: Date) => void;
 }
 
 export default function APODView(props: APODViewProps): JSX.Element {
@@ -44,6 +48,7 @@ export default function APODView(props: APODViewProps): JSX.Element {
 
     const [imageWidth, setImageWidth] = useState<number>(0);
     const [imageHeight, setImageHeight] = useState<number>(0);
+    const [isDatePickerOpen, setDatePickerOpen] = useState<boolean>(false);
 
     Image.getSize(data.url, (imgWidth, imgHeight) => {
         // Desired width of image is screen width minus 2 horizontal-padding widths to account for padding on both
@@ -57,24 +62,51 @@ export default function APODView(props: APODViewProps): JSX.Element {
         setImageHeight(imgHeight * ratio);
     });
 
+    const [year, month, day] = data.date.split("-");
+
     return (
-        <View style={styles.container}>
-            <ScrollView>
-                <Text>{error}</Text>
-                <Text style={styles.title}>{data.title}</Text>
-                <Text style={styles.subtitle}>
-                    {data.copyright} {"\u2022"} {data.date}
-                </Text>
-                <Image
-                    source={{ uri: data.url }}
-                    style={{
-                        width: imageWidth,
-                        height: imageHeight,
-                    }}
-                />
-                <Text>{data.explanation}</Text>
-            </ScrollView>
-        </View>
+        <>
+            <View style={styles.container}>
+                <ScrollView>
+                    <Text>{error}</Text>
+                    <Button
+                        title={data.date}
+                        onPress={() => {
+                            setDatePickerOpen(true);
+                        }}
+                    ></Button>
+                    <Text style={styles.title}>{data.title}</Text>
+                    <Text style={styles.subtitle}>{data.copyright}</Text>
+                    <Image
+                        source={{ uri: data.url }}
+                        style={{
+                            width: imageWidth,
+                            height: imageHeight,
+                        }}
+                    />
+                    <Text>{data.explanation}</Text>
+                </ScrollView>
+            </View>
+            <DatePicker
+                modal
+                mode="date"
+                open={isDatePickerOpen}
+                date={
+                    new Date(
+                        Number.parseInt(year),
+                        Number.parseInt(month) - 1,
+                        Number.parseInt(day)
+                    )
+                }
+                onConfirm={(date) => {
+                    props.getAPOD(date);
+                    setDatePickerOpen(false);
+                }}
+                onCancel={() => {
+                    setDatePickerOpen(false);
+                }}
+            />
+        </>
     );
 }
 

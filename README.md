@@ -4,7 +4,15 @@ A mobile app that uses NASA's Astronomy Picture of the Day (APOD) API to display
 
 This project replaces the [old Android app](https://github.com/johneastman/APOD), which was written in Java.
 
-## Run on Android Device
+## Resources
+
+-   NASA APOD API documentation: https://github.com/nasa/apod-api
+
+## Installation
+
+1. Run `npm install` from root directory.
+
+### Run on Android Device
 
 1. Download Android Studio
 1. Install [`Android 13 (Tiramisu)`](https://reactnative.dev/docs/environment-setup?guide=native#android-sdk)

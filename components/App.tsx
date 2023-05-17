@@ -8,35 +8,58 @@ export default function App(): JSX.Element {
     const [data, setData] = useState<APODResponse>();
     const [error, setError] = useState<string>();
 
+    let baseUrl: string = "https://api.nasa.gov/planetary/apod";
     let apiKey: string = "U49pcyFPwCOyQpCFTIlJf9SEeJgjIpGhXshmlUmf";
+
     useEffect(() => {
-        fetch(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}`)
-            .then((response) => {
-                if (response.ok) {
-                    return response.json();
-                }
-                throw response;
+        getAPOD();
+    }, []);
+
+    let getAPOD = (date: Date = new Date()) => {
+        let year: number = date.getFullYear();
+        let month: number = date.getMonth() + 1;
+        let day: number = date.getDate();
+
+        let dateString: string = `${year.toString()}-${month
+            .toString()
+            .padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
+
+        fetch(`${baseUrl}?api_key=${apiKey}&date=${dateString}`)
+            .then(async (response) => {
+                return {
+                    status: response.status,
+                    json: await response.json(),
+                };
             })
             .then((data) => {
-                let apodResponse = new APODResponse(
-                    data.copyright || "Public Domain",
-                    data.title,
-                    data.date,
-                    data.explanation,
-                    data.media_type,
-                    data.url
-                );
-                setData(apodResponse);
+                const { status, json } = data;
+
+                if (status == 200) {
+                    let apodResponse = new APODResponse(
+                        json.copyright || "Public Domain",
+                        json.title,
+                        json.date,
+                        json.explanation,
+                        json.media_type,
+                        json.url
+                    );
+                    setData(apodResponse);
+                    setError("");
+                } else {
+                    setError(json.msg);
+                }
             })
-            .catch((error: Error) => setError(error.toString()));
-    }, []);
+            .catch((error) => {
+                setError(error.message);
+            });
+    };
 
     return (
         <>
             {data === undefined ? (
                 <Loading />
             ) : (
-                <APODView data={data} error={error || ""} />
+                <APODView data={data} error={error || ""} getAPOD={getAPOD} />
             )}
             <StatusBar style="auto" />
         </>
