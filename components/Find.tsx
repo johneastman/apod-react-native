@@ -45,6 +45,8 @@ export default function Find(): JSX.Element {
                         json.explanation,
                         json.media_type,
                         json.url,
+
+                        // Only videos have thumbnails, so if the media type is an image, use the image url as the thumbnail
                         json.thumbnail_url || json.url
                     );
                     setData(apodResponse);

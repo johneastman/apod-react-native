@@ -11,8 +11,6 @@ export default function CustomImage(props: CustomImageProps): JSX.Element {
     const [height, setHeight] = useState<number>(0);
 
     Image.getSize(props.url, (imgWidth, imgHeight) => {
-        // Desired width of image is screen width minus 2 horizontal-padding widths to account for padding on both
-        // left and right sides of screen.
         let ratio = props.width / imgWidth;
 
         setWidth(imgWidth * ratio);

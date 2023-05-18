@@ -53,6 +53,8 @@ export default function APODView(props: APODViewProps): JSX.Element {
     const [isDatePickerOpen, setDatePickerOpen] = useState<boolean>(false);
     const [year, month, day] = data.date.split("-");
 
+    // Desired width of images is screen width minus 2 horizontal-padding widths to account for padding on both
+    // left and right sides of screen.
     let imageWidth: number =
         Dimensions.get("window").width - styles.container.marginHorizontal * 2;
 
